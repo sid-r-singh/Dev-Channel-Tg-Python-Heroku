@@ -5,45 +5,107 @@
 
 import os
 import logging
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, CallbackContext
+from typing import Dict
+
+from telegram import ReplyKeyboardMarkup, Update
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
 
 TOKEN = os.getenv("TOKEN")
+#Start change
 
+
+
+# Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
 )
+
 logger = logging.getLogger(__name__)
 
+CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
-def start(update: Update, context: CallbackContext) -> None:
-    keyboard = [
-        [
-            InlineKeyboardButton("Option 1", callback_data='1'),
-            InlineKeyboardButton("Option 2", callback_data='2'),
-        ],
-        [InlineKeyboardButton("Option 3", callback_data='3')],
-    ]
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
-
-    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+reply_keyboard = [
+    ['Age', 'Favourite colour'],
+    ['Number of siblings', 'Something else...'],
+    ['Done'],
+]
+markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
 
-def button(update: Update, context: CallbackContext) -> None:
-    query = update.callback_query
+def facts_to_str(user_data: Dict[str, str]) -> str:
+    facts = list()
 
-    # CallbackQueries need to be answered, even if no notification to the user is needed
-    # Some clients may have trouble otherwise. See https://core.telegram.org/bots/api#callbackquery
-    query.answer()
+    for key, value in user_data.items():
+        facts.append(f'{key} - {value}')
 
-    query.edit_message_text(text=f"Selected option: {query.data}")
-
-
-def help_command(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text("Use /start to test this bot.")
+    return "\n".join(facts).join(['\n', '\n'])
 
 
+def start(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text(
+        "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
+        "Why don't you tell me something about yourself?",
+        reply_markup=markup,
+    )
+
+    return CHOOSING
+
+
+def regular_choice(update: Update, context: CallbackContext) -> int:
+    text = update.message.text
+    context.user_data['choice'] = text
+    update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
+
+    return TYPING_REPLY
+
+
+def custom_choice(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text(
+        'Alright, please send me the category first, ' 'for example "Most impressive skill"'
+    )
+
+    return TYPING_CHOICE
+
+
+def received_information(update: Update, context: CallbackContext) -> int:
+    user_data = context.user_data
+    text = update.message.text
+    category = user_data['choice']
+    user_data[category] = text
+    del user_data['choice']
+
+    update.message.reply_text(
+        "Neat! Just so you know, this is what you already told me:"
+        f"{facts_to_str(user_data)} You can tell me more, or change your opinion"
+        " on something.",
+        reply_markup=markup,
+    )
+
+    return CHOOSING
+
+
+def done(update: Update, context: CallbackContext) -> int:
+    user_data = context.user_data
+    if 'choice' in user_data:
+        del user_data['choice']
+
+    update.message.reply_text(
+        f"I learned these facts about you: {facts_to_str(user_data)} Until next time!"
+    )
+
+    user_data.clear()
+    return ConversationHandler.END
+
+
+
+#End change
 def run(updater):
     PORT = int(os.environ.get("PORT", "8443"))
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
@@ -57,18 +119,47 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
+
+
 def main() -> None:
     # Create the Updater and pass it your bot's token.
     
     updater = Updater(TOKEN)
     
-
-
-    updater.dispatcher.add_handler(CommandHandler('start', start))
-    updater.dispatcher.add_handler(CallbackQueryHandler(button))
-    updater.dispatcher.add_handler(CommandHandler('help', help_command))
+    #Start change
     
-    updater.dispatcher.add_error_handler(error)
+    dispatcher = updater.dispatcher
+
+    # Add conversation handler with the states CHOOSING, TYPING_CHOICE and TYPING_REPLY
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('start', start)],
+        states={
+            CHOOSING: [
+                MessageHandler(
+                    Filters.regex('^(Age|Favourite colour|Number of siblings)$'), regular_choice
+                ),
+                MessageHandler(Filters.regex('^Something else...$'), custom_choice),
+            ],
+            TYPING_CHOICE: [
+                MessageHandler(
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')), regular_choice
+                )
+            ],
+            TYPING_REPLY: [
+                MessageHandler(
+                    Filters.text & ~(Filters.command | Filters.regex('^Done$')),
+                    received_information,
+                )
+            ],
+        },
+        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+    )
+
+    dispatcher.add_handler(conv_handler)
+    
+    #End change
+    
+    dispatcher.add_error_handler(error)
 
     run(updater)
 

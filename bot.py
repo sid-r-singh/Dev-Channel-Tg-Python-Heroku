@@ -97,7 +97,7 @@ def done(update: Update, context: CallbackContext) -> int:
         del user_data['choice']
 
     update.message.reply_text(
-        f"I learned these facts about you: {facts_to_str(user_data)} Until next time!"
+        f"I learned these facts about you: {facts_to_str(user_data)} Until next time!\nNext time U wish to talk to me, just send /start to me 😊"
     )
 
     user_data.clear()

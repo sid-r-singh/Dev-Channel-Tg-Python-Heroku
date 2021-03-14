@@ -92,14 +92,16 @@ def received_information(update: Update, context: CallbackContext) -> int:
     return CHOOSING
 
 # Only way to end conversation is by pressing 'done'
+# Function 'done' to do that
 def done(update: Update, context: CallbackContext) -> int:
     user_data = context.user_data
+    user = update.message.from_user
     if 'choice' in user_data:
         del user_data['choice']
     print(user_data)
     print(type(user_data))
     update.message.reply_text(
-        f"I learned these facts about you: {facts_to_str(user_data)} \nThe next time U wish to talk to me, just send\n /start to me 😊"
+        f"Hey {user.first_name}, I learned these facts about you: {facts_to_str(user_data)} \nThe next time U wish to talk to me, just send\n /start to me 😊"
     )
 
     user_data.clear()

@@ -32,7 +32,7 @@ logger = logging.getLogger(__name__)
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
 reply_keyboard = [
-    ['Age', 'Favourite colour'],
+    ['Monte Carlo', 'Favourite colour'],
     ['Number of siblings', 'Something else...'],
     ['Done'],
 ]
@@ -138,7 +138,7 @@ def main() -> None:
         states={
             CHOOSING: [
                 MessageHandler(
-                    Filters.regex('^(Age|Favourite colour|Number of siblings)$'), regular_choice
+                    Filters.regex('^(Monte Carlo|Favourite colour|Number of siblings)$'), regular_choice
                 ),
                 MessageHandler(Filters.regex('^Something else...$'), custom_choice),
             ],

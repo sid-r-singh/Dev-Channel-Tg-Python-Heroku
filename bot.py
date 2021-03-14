@@ -95,7 +95,8 @@ def done(update: Update, context: CallbackContext) -> int:
     user_data = context.user_data
     if 'choice' in user_data:
         del user_data['choice']
-    logger.info(user_data)
+    print(user_data)
+    print(type(user_data))
     update.message.reply_text(
         f"I learned these facts about you: {facts_to_str(user_data)} \nThe next time U wish to talk to me, just send\n /start to me 😊"
     )

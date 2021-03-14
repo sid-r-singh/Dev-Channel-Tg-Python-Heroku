@@ -50,8 +50,9 @@ def facts_to_str(user_data: Dict[str, str]) -> str:
 # Initiate conversation
 def start(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
-        "Why don't you tell me something about yourself?",
+        "Hi! My name is Doctor Botter"
+        "Why don't you tell me something about yourself?"
+        "Choose a simulation that u would like to run",
         reply_markup=markup,
     )
 

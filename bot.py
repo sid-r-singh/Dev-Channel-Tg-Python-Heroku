@@ -7,7 +7,7 @@ import os
 import logging
 from typing import Dict
 
-from telegram import ReplyKeyboardMarkup, Update
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
     Updater,
     CommandHandler,
@@ -38,6 +38,11 @@ reply_keyboard = [
 ]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
+reply_keyboard2 = [
+    ['Yes', 'No'],
+]
+markup2 = ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True)
+
 # Function facts_to_str to convert dict to string
 def facts_to_str(user_data: Dict[str, str]) -> str:
     facts = list()
@@ -63,6 +68,14 @@ def regular_choice(update: Update, context: CallbackContext) -> int:
     text = update.message.text
     context.user_data['choice'] = text
     update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
+
+    return TYPING_REPLY
+
+
+def params_choice(update: Update, context: CallbackContext) -> int:
+    text = update.message.text
+    context.user_data['choice'] = text
+    update.message.reply_text(f'Please enter {text.lower()}? no. of trials')
 
     return TYPING_REPLY
 
@@ -141,9 +154,14 @@ def main() -> None:
         states={
             CHOOSING: [
                 MessageHandler(
-                    Filters.regex('^(Monte Carlo|Favourite colour|Number of siblings)$'), regular_choice
+                    Filters.regex('^(Favourite colour|Number of siblings)$'), regular_choice
                 ),
-                MessageHandler(Filters.regex('^Something else...$'), custom_choice),
+                MessageHandler(
+                    Filters.regex('^Something else...$'), custom_choice
+                ),
+                MessageHandler(
+                    Filters.regex('^Monte Carlo$'), params_choice
+                ), 
             ],
             TYPING_CHOICE: [
                 MessageHandler(

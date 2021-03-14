@@ -77,7 +77,7 @@ def params_choice(update: Update, context: CallbackContext) -> int:
     context.user_data['choice'] = text
     update.message.reply_text(f'Please enter {text.lower()}? no. of trials',reply_markup=markup2,)
 
-    return  TYPING_REPLY
+    return TYPING_REPLY
 
 def custom_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(

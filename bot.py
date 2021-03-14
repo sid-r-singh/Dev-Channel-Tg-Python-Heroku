@@ -38,7 +38,7 @@ reply_keyboard = [
 ]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
-
+# Function facts_to_str to convert dict to string
 def facts_to_str(user_data: Dict[str, str]) -> str:
     facts = list()
 
@@ -47,7 +47,7 @@ def facts_to_str(user_data: Dict[str, str]) -> str:
 
     return "\n".join(facts).join(['\n', '\n'])
 
-
+# Initiate conversation
 def start(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
         "Hi! My name is Doctor Botter. I will hold a more complex conversation with you. "
@@ -90,12 +90,12 @@ def received_information(update: Update, context: CallbackContext) -> int:
 
     return CHOOSING
 
-
+# Only way to end conversation is by pressing 'done'
 def done(update: Update, context: CallbackContext) -> int:
     user_data = context.user_data
     if 'choice' in user_data:
         del user_data['choice']
-
+    logger.info(user_data)
     update.message.reply_text(
         f"I learned these facts about you: {facts_to_str(user_data)} \nThe next time U wish to talk to me, just send\n /start to me 😊"
     )

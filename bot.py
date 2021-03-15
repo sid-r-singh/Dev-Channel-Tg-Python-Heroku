@@ -42,8 +42,15 @@ reply_keyboard2 = [
 ]
 markup2 = ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True)
 
+reply_keyboard3 = [
+    ["P1:apple", "P2:banana", "P3:cherry"],
+]
+markup3 = ReplyKeyboardMarkup(reply_keyboard3, one_time_keyboard=True)
 
-thislist = ["P1:apple", "P2:banana", "P3:cherry"]
+
+thislist = [
+    ["P1:apple", "P2:banana", "P3:cherry"]
+]
 
 # Function facts_to_str to convert dict to string
 def facts_to_str(user_data: Dict[str, str]) -> str:
@@ -82,9 +89,9 @@ def params_choice(update: Update, context: CallbackContext) -> int:
     return TYPING_REPLY
 
 def params_choice2(update: Update, context: CallbackContext) -> int:
-    text = thislist[1]
+    text = update.message.text
     context.user_data['choice'] = text
-    update.message.reply_text(f'Please enter {text.lower()}? no. of trials',reply_markup=markup2,)
+    update.message.reply_text(f'Please enter value for {text.lower()}?',reply_markup=markup3,)
 
     return TYPING_REPLY
 

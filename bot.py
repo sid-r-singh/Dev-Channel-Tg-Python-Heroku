@@ -81,6 +81,14 @@ def params_choice(update: Update, context: CallbackContext) -> int:
 
     return TYPING_REPLY
 
+def params_choice2(update: Update, context: CallbackContext) -> int:
+    text = thislist[1]
+    context.user_data['choice'] = text
+    update.message.reply_text(f'Please enter {text.lower()}? no. of trials',reply_markup=markup2,)
+
+    return TYPING_REPLY
+
+
 def custom_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
         'Alright, please send me the category first, ' 'for example "Most impressive skill"'
@@ -163,7 +171,11 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                )],
+                )
+                MessageHandler(
+                    Filters.regex('^P2:banana$'), params_choice2
+                )
+                ],
             
             TYPING_CHOICE: [
                 MessageHandler(

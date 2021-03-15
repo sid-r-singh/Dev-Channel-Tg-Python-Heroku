@@ -92,7 +92,7 @@ def params_choice(update: Update, context: CallbackContext) -> int:
 
 def custom_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
-        'Alright, please send me the category first, ' 'for example "Most impressive skill"'
+        'Alright, please send me the category first, ' 'for example "Most impressive skill"', reply_markup=markup3
     )
 
     return TYPING_CHOICE
@@ -171,16 +171,17 @@ def main() -> None:
                     Filters.text('^Something else...$'), custom_choice
                 ),
                 MessageHandler(
-                    Filters.text(thislist), regular_choice
-                ),
-                MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
                 )],
             
             TYPING_CHOICE: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')), regular_choice
-                )],
+                )
+                MessageHandler(
+                    Filters.text(thislist), regular_choice
+                ),
+                ],
             
             TYPING_REPLY: [
                 MessageHandler(

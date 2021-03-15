@@ -171,10 +171,10 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                )
+                ),
                 MessageHandler(
                     Filters.regex('^P2:banana$'), params_choice2
-                )
+                ),
                 ],
             
             TYPING_CHOICE: [

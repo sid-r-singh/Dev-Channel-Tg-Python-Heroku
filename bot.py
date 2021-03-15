@@ -48,9 +48,8 @@ reply_keyboard3 = [
 markup3 = ReplyKeyboardMarkup(reply_keyboard3, one_time_keyboard=True)
 
 
-thislist = [
-    ["P1:apple", "P2:banana", "P3:cherry"]
-]
+thislist = ["P1:apple", "P2:banana", "P3:cherry"]
+
 
 # Function facts_to_str to convert dict to string
 def facts_to_str(user_data: Dict[str, str]) -> str:
@@ -93,7 +92,7 @@ def params_choice2(update: Update, context: CallbackContext) -> int:
     context.user_data['choice'] = text
     update.message.reply_text(f'Please enter value for {text.lower()}?',reply_markup=markup3,)
 
-    return TYPING_REPLY
+    return CHOOSING
 
 
 def custom_choice(update: Update, context: CallbackContext) -> int:
@@ -181,6 +180,9 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Yes$'), params_choice2
+                ),
+                MessageHandler(
+                    Filters.regex(reply_keyboard3), params_choice2
                 ),
                 ],
             

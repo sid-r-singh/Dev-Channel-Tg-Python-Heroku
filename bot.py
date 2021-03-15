@@ -177,7 +177,7 @@ def main() -> None:
             TYPING_CHOICE: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')), regular_choice
-                )
+                ),
                 MessageHandler(
                     Filters.text(thislist), regular_choice
                 ),

@@ -176,7 +176,7 @@ def main() -> None:
                     received_information,
                 )],
         },
-        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
+        fallbacks=[MessageHandler(Filters.regex('^Finish$'), done)],
     )
 
     dispatcher.add_handler(conv_handler)

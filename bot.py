@@ -32,9 +32,8 @@ logger = logging.getLogger(__name__)
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
 reply_keyboard = [
-    ['Monte Carlo', 'Favourite colour'],
-    ['Number of siblings', 'Something else...'],
-    ['Done'],
+    ['Monte Carlo', 'Other prog'],
+    ['Finish'],
 ]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 

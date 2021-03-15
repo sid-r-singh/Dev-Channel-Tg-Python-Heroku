@@ -71,12 +71,13 @@ def start(update: Update, context: CallbackContext) -> int:
 
     return CHOOSING
 
-
+i = 0;
 def regular_choice(update: Update, context: CallbackContext) -> int:
-    text = update.message.text
+    global i
+    text = thislist[i]
     context.user_data['choice'] = text
     update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
-
+    i++
     return TYPING_REPLY
 
 
@@ -85,7 +86,7 @@ def params_choice(update: Update, context: CallbackContext) -> int:
     context.user_data['choice'] = text
     update.message.reply_text(f'Please enter {text.lower()}? no. of trials',reply_markup=markup2,)
 
-    return CHOOSING
+    return TYPING_REPLY
 
 def params_choice2(update: Update, context: CallbackContext) -> int:
     text = update.message.text
@@ -177,12 +178,6 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                ),
-                MessageHandler(
-                    Filters.regex('^Yes$'), params_choice2
-                ),
-                MessageHandler(
-                    Filters.text(thislist), params_choice2
                 ),
                 ],
             

@@ -44,6 +44,8 @@ markup2 = ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True)
 
 reply_keyboard3 = [
     ["P1:apple", "P2:banana", "P3:cherry"],
+    ["P4:apple", "P5:banana", "P6:cherry"],
+    ['Finish'],
 ]
 markup3 = ReplyKeyboardMarkup(reply_keyboard3, one_time_keyboard=True)
 
@@ -74,7 +76,7 @@ def start(update: Update, context: CallbackContext) -> int:
 i = 0;
 def regular_choice(update: Update, context: CallbackContext) -> int:
     global i
-    text = thislist[i]
+    text = update.message.text
     context.user_data['choice'] = text
     update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
     i=i+1

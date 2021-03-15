@@ -180,7 +180,7 @@ def main() -> None:
                     Filters.regex('^Monte Carlo$'), params_choice
                 ),
                 MessageHandler(
-                    Filters.regex('^Yes'), params_choice2
+                    Filters.regex('^Yes$'), params_choice2
                 ),
                 ],
             

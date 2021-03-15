@@ -182,7 +182,7 @@ def main() -> None:
                     Filters.regex('^Yes$'), params_choice2
                 ),
                 MessageHandler(
-                    Filters.regex(reply_keyboard3), params_choice2
+                    Filters.regex(thislist), params_choice2
                 ),
                 ],
             

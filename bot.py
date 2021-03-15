@@ -77,7 +77,7 @@ def regular_choice(update: Update, context: CallbackContext) -> int:
     text = thislist[i]
     context.user_data['choice'] = text
     update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
-    i++
+    i=i+1
     return TYPING_REPLY
 
 

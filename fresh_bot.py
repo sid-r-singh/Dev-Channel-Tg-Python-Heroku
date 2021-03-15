@@ -38,7 +38,7 @@ def facts_to_str(user_data):
 def start(update, context):
     update.message.reply_text(
         "Hi! I am your High performance computing (HPC) bot. Use me to do HPC in small time.\n"
-        "Currently I support only Monte Carlo program. Send me the no. of trials (integer expected)"
+        "Currently I support only Monte Carlo program.\nSend me the no. of trials (integer expected)"
         )
     return PAR_1
    

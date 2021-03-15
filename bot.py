@@ -43,6 +43,9 @@ reply_keyboard2 = [
 ]
 markup2 = ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True)
 
+
+thislist = ["P1:apple", "P2:banana", "P3:cherry"]
+
 # Function facts_to_str to convert dict to string
 def facts_to_str(user_data: Dict[str, str]) -> str:
     facts = list()
@@ -161,19 +164,18 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                ), 
-            ],
+                )],
+            
             TYPING_CHOICE: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')), regular_choice
-                )
-            ],
+                )],
+            
             TYPING_REPLY: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')),
                     received_information,
-                )
-            ],
+                )],
         },
         fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
     )

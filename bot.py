@@ -172,15 +172,17 @@ def main() -> None:
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                )],
+                )
+                MessageHandler(
+                    Filters.text(thislist) | Filters.regex('^Yes$'), regular_choice
+                ),
+                ],
             
             TYPING_CHOICE: [
                 MessageHandler(
                     Filters.text & ~(Filters.command | Filters.regex('^Done$')), regular_choice
                 ),
-                MessageHandler(
-                    Filters.text(thislist) | Filters.regex('^Yes$'), regular_choice
-                ),
+                
                 ],
             
             TYPING_REPLY: [

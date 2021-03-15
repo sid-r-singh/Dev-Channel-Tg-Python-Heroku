@@ -32,8 +32,9 @@ logger = logging.getLogger(__name__)
 CHOOSING, TYPING_REPLY, TYPING_CHOICE = range(3)
 
 reply_keyboard = [
-    ['Monte Carlo', 'Other prog'],
-    ['Finish'],
+    ['Monte Carlo', 'Favourite colour'],
+    ['Number of siblings', 'Something else...'],
+    ['Done'],
 ]
 markup = ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)
 
@@ -42,9 +43,9 @@ reply_keyboard2 = [
 ]
 markup2 = ReplyKeyboardMarkup(reply_keyboard2, one_time_keyboard=True)
 
+
 reply_keyboard3 = [
     ["P1:apple", "P2:banana", "P3:cherry"],
-    ["P4:apple", "P5:banana", "P6:cherry"],
     ['Finish'],
 ]
 markup3 = ReplyKeyboardMarkup(reply_keyboard3, one_time_keyboard=True)
@@ -73,13 +74,12 @@ def start(update: Update, context: CallbackContext) -> int:
 
     return CHOOSING
 
-i = 0;
+
 def regular_choice(update: Update, context: CallbackContext) -> int:
-    global i
     text = update.message.text
     context.user_data['choice'] = text
-    update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!')
-    i=i+1
+    update.message.reply_text(f'Your {text.lower()}? Yes, I would love to hear about that!', reply_markup=markup3,)
+
     return TYPING_REPLY
 
 
@@ -89,14 +89,6 @@ def params_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(f'Please enter {text.lower()}? no. of trials',reply_markup=markup2,)
 
     return TYPING_REPLY
-
-def params_choice2(update: Update, context: CallbackContext) -> int:
-    text = update.message.text
-    context.user_data['choice'] = text
-    update.message.reply_text(f'Please enter value for {text.lower()}?',reply_markup=markup3,)
-
-    return CHOOSING
-
 
 def custom_choice(update: Update, context: CallbackContext) -> int:
     update.message.reply_text(
@@ -117,7 +109,7 @@ def received_information(update: Update, context: CallbackContext) -> int:
         "Neat! Just so you know, this is what you already told me:"
         f"{facts_to_str(user_data)} You can tell me more, or change your opinion"
         " on something.",
-        reply_markup=markup3,
+        reply_markup=markup,
     )
 
     return CHOOSING
@@ -176,12 +168,14 @@ def main() -> None:
                     Filters.regex('^(Favourite colour|Number of siblings)$'), regular_choice
                 ),
                 MessageHandler(
-                    Filters.regex('^Something else...$'), custom_choice
+                    Filters.text('^Something else...$'), custom_choice
+                ),
+                MessageHandler(
+                    Filters.text(thislist), regular_choice
                 ),
                 MessageHandler(
                     Filters.regex('^Monte Carlo$'), params_choice
-                ),
-                ],
+                )],
             
             TYPING_CHOICE: [
                 MessageHandler(
@@ -194,7 +188,7 @@ def main() -> None:
                     received_information,
                 )],
         },
-        fallbacks=[MessageHandler(Filters.regex('^Finish$'), done)],
+        fallbacks=[MessageHandler(Filters.regex('^Done$'), done)],
     )
 
     dispatcher.add_handler(conv_handler)
@@ -209,7 +203,3 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
-
-
-
-

@@ -66,7 +66,8 @@ def confirmation(update, context):
     update.message.reply_text(f"Thank you for confirming {user.first_name}. I will soon update you with result.", reply_markup=ReplyKeyboardRemove())
     print(user_data)
     print(type(user_data))
-    if (type(user_data['trials']) == int):
+    trials_entered = int(user_data['trials'])
+    if (type(trials_entered) == int):
         logger.info("Valid integer")
     else:
         logger.info("Invalid integer")

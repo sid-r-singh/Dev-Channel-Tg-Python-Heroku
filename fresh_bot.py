@@ -91,7 +91,7 @@ def error(update, context):
 
 
 def run(updater):
-    PORT = int(os.environ.get("PORT", "443"))
+    PORT = int(os.environ.get("PORT", "88"))
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,

@@ -90,7 +90,7 @@ def error(update, context):
     logger.warning('Update "%s" caused error "%s"', update, context.error)
 
 
-    PORT = int(os.environ.get("PORT", "8443"))
+    PORT = int(os.environ.get('PORT', '8443'))
     HEROKU_APP_NAME = os.environ.get("HEROKU_APP_NAME")
     updater.start_webhook(listen="0.0.0.0",
                           port=PORT,
